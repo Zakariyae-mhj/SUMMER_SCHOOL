@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Application Form - Summer School</title>
+    <style>
+        body { font-family: Arial, sans-serif; background-color: #f4f4f9; display: flex; justify-content: center; align-items: center; height: 100vh; margin: 0; }
+        .form-container { background: white; padding: 30px; border-radius: 10px; box-shadow: 0 4px 8px rgba(0,0,0,0.1); width: 100%; max-width: 500px; }
+        h2 { text-align: center; color: #333; }
+        label { font-weight: bold; display: block; margin-top: 15px; margin-bottom: 5px; }
+        input[type="text"], input[type="email"], input[type="file"] { width: 100%; padding: 10px; border: 1px solid #ccc; border-radius: 5px; box-sizing: border-box; }
+        button { width: 100%; padding: 12px; background-color: #28a745; color: white; border: none; border-radius: 5px; font-size: 18px; font-weight: bold; margin-top: 20px; cursor: pointer; }
+        button:hover { background-color: #218838; }
+        #statusMessage { text-align: center; margin-top: 15px; font-weight: bold; }
+    </style>
+</head>
+<body>
+
+    <div class="form-container">
+        <h2>Summer School Application</h2>
+        <form id="applicationForm">
+            <label for="fullName">Full Name:</label>
+            <input type="text" id="fullName" required>
+
+            <label for="email">Email Address:</label>
+            <input type="email" id="email" required>
+
+            <label for="university">University / Institution:</label>
+            <input type="text" id="university" required>
+
+            <label for="cv">Upload CV (PDF or Word):</label>
+            <input type="file" id="cv" accept=".pdf,.doc,.docx" required>
+
+            <button type="submit" id="submitBtn">Submit Application</button>
+        </form>
+        <div id="statusMessage"></div>
+    </div>
+
+    <script>
+        // ضع الرابط الذي ستحصل عليه من Google Apps Script هنا
+        const scriptURL = 'YOUR_GOOGLE_SCRIPT_URL_HERE';
+
+        const form = document.getElementById('applicationForm');
+        const submitBtn = document.getElementById('submitBtn');
+        const statusMessage = document.getElementById('statusMessage');
+
+        form.addEventListener('submit', e => {
+            e.preventDefault();
+            submitBtn.disabled = true;
+            submitBtn.innerText = "Uploading to Drive... Please wait.";
+            statusMessage.style.color = "blue";
+            statusMessage.innerText = "";
+
+            const fileInput = document.getElementById('cv');
+            const file = fileInput.files[0];
+            const reader = new FileReader();
+
+            reader.onload = function() {
+                const base64Data = reader.result;
+                const payload = {
+                    fullName: document.getElementById('fullName').value,
+                    email: document.getElementById('email').value,
+                    university: document.getElementById('university').value,
+                    cvData: base64Data,
+                    fileName: file.name,
+                    mimeType: file.type
+                };
+
+                fetch(scriptURL, {
+                    method: 'POST',
+                    body: JSON.stringify(payload)
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if(data.status === "success") {
+                        statusMessage.style.color = "green";
+                        statusMessage.innerText = "Application submitted successfully!";
+                        form.reset();
+                    } else {
+                        statusMessage.style.color = "red";
+                        statusMessage.innerText = "Error: " + data.message;
+                    }
+                    submitBtn.disabled = false;
+                    submitBtn.innerText = "Submit Application";
+                })
+                .catch(error => {
+                    statusMessage.style.color = "red";
+                    statusMessage.innerText = "Network Error! Please try again.";
+                    submitBtn.disabled = false;
+                    submitBtn.innerText = "Submit Application";
+                });
+            };
+            reader.readAsDataURL(file);
+        });
+    </script>
+</body>
+</html>
