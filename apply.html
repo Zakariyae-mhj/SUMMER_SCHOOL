@@ -22,15 +22,14 @@
             border-radius: 10px; 
             box-shadow: 0 4px 15px rgba(0,0,0,0.1); 
             width: 100%; 
-            max-width: 650px; /* تم زيادة العرض لتناسب الشعارات الأربعة بشكل أفضل */
+            max-width: 650px; 
         }
-        /* تنسيق صورة الشعارات لتكون كشريط علوي (Banner) */
         .logos-banner {
             width: 100%;
             height: auto;
             margin-bottom: 20px;
             padding-bottom: 20px;
-            border-bottom: 2px solid #eaeaea; /* خط أنيق يفصل الشعارات عن الاستمارة */
+            border-bottom: 2px solid #eaeaea; 
             display: block;
         }
         h2 { 
@@ -57,7 +56,7 @@
         button { 
             width: 100%; 
             padding: 12px; 
-            background-color: #0056b3; /* لون أزرق يتناسب مع طابع الإعلان */
+            background-color: #0056b3; 
             color: white; 
             border: none; 
             border-radius: 5px; 
@@ -80,7 +79,7 @@
 <body>
 
     <div class="form-container">
-        <img src="14.jpg" alt="Organizers Logos" class="logos-banner">
+        <img src="14.png" alt="Organizers Logos" class="logos-banner">
 
         <h2>Summer School Application</h2>
         <form id="applicationForm">
@@ -93,7 +92,7 @@
             <label for="university">University / Institution:</label>
             <input type="text" id="university" required>
 
-            <label for="cv">Upload Motivation Letter & CV (PDF):</label>
+            <label for="cv">Upload CV (PDF or Word):</label>
             <input type="file" id="cv" accept=".pdf,.doc,.docx" required>
 
             <button type="submit" id="submitBtn">Submit Application</button>
